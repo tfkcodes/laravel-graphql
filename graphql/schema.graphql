@@ -1,0 +1,65 @@
+type DikeUser {
+    id: ID!
+    name: String!
+    email: String!
+    role: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Country {
+    id: ID!
+    name: String!
+    code: String
+    regions: [Region!] @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Region {
+    id: ID!
+    name: String!
+    code: String
+    country: Country! @belongsTo
+    districts: [District!] @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Report {
+    id: ID!
+    title: String!
+    description: String!
+    status: String!
+    user: DikeUser! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Query {
+    users: [DikeUser!]! @all
+    user(id: ID!): DikeUser @find
+    reports: [Report!]! @all
+    report(id: ID!): Report @find
+    countries: [Country!]! @all
+    country(id: ID!): Country @find
+}
+
+input CreateUserInput {
+    name: String!
+    email: String!
+    password: String!
+    role: String!
+}
+
+input CreateReportInput {
+    title: String!
+    description: String!
+    status: String!
+    user_id: ID!
+}
+
+type Mutation {
+    createUser(input: CreateUserInput!): DikeUser @create
+    createReport(input: CreateReportInput!): Report @create
+}
